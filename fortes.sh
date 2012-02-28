@@ -5,20 +5,10 @@
 # Goal: This tool aims to create Test Cases based on claims from ESBMC 
 #		model checker
 # Author: Herbert O. Rocha E-mail: herberthb12@gmail.com
-# Version: 1.2 - Year: 2011
-# License: GPL	
+# Version: 2 - Year: 2012
+# License: GPL V3	
 # STATUS: NOKAY
 #---------------------------------------------------------------------
-
-#--------------------------------------------------------------------
-#remenber to delete theses codes
-#acesso as pasta dos codes que serão analisados
-#DIR_CCODE=c_code_here
-#cd $DIR_CCODE
-#list of files
-#SOURCES=$(ls *.c)
-#cd ..
-#--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
 #settings preprocessador
@@ -37,7 +27,6 @@ DIR_GET_AND_SET_CLAIMS=modulos/get_and_set_claims/get_and_set_claims.pl
 
 DIR_RESULT_END_CODE=new_code
 
-
 #------------------------------ functions ---------------------------
 #get file that will be analised
 start_program()
@@ -47,14 +36,14 @@ start_program()
 	if [ -e "$1" ]; 
 	then
 		echo "######################################################"
-		echo "---------------- FORTES (Beta) v1.2 ----------------"
+		echo "---------------- FORTES (Beta) v2 ----------------"
 		echo "--------------------------------------------------"
 		echo " " 
 		echo "ANSI-C program: $1"
 		echo " " 
 		echo "--------------------------------------------------"
 		
-		#preprocessing the C program that it'll be analysed
+		#preprocessing the C program that will be analysed
 		#$1 -> file.c and $2 -> function/claim file
 		#exec_processadorc $1 $2					
 		exec_processadorc $1
