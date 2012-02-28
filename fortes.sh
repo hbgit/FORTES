@@ -49,7 +49,7 @@ start_program()
 		exec_processadorc $1
 		
 	else
-		echo "No file: $1.c - Please try again" 
+		echo "No <$1> found - Please try again" 		
 	fi	
 }
 #./uncrustify -q -l C -c ben.cfg -f ../ccode_here/testCode.c
@@ -213,60 +213,79 @@ clean(){
 
 #------------------------------ end functions -------------------------
 
-#main
-
+#------------------------------   main    -----------------------------
+clear
 if [ $# -ge 1 ];
+then	
+	while getopts  "hcf:" flag
+	do		
+		case "${flag}" in
+			h) 
+				received_h=1			
+			;;
+			c) 
+				received_c=1						
+			;;
+			f) 
+				received_f=1
+				arg_f="${OPTARG}"				
+			;;	
+			*) 
+			echo "Sorry, there isn't this option!"
+			exit 1;
+			;;		
+		esac
+	done	
+else
+	echo "Please provide a C program to apply - fortes <file.c> or usage fortes -h"
+fi
+
+#Checking the options
+if [ ${received_h} ]
 then
-	#verifying if there is a parameter
-	r=$(echo $1 | grep -c "^-")
-	if [ $r -eq 1 ];
-	then
-	  case $1 in
-		"-h") 
 			echo ""
-			echo "-----------------------------  FORTES (Beta) v1.2 ----------------------------"
+			echo "------------------------------  FORTES (Beta) v2 ---------------------------"
 			echo "		  .-."
 			echo "		  /v\\"
 			echo "		 // \\\\    > L I N U X - GPL<"
 			echo "		/(   )\\"
 			echo "		 ^^-^^"
-			echo "------------------------------------------------------------------------------"
-			echo "Usage: "
-			echo ""			
-			echo "fortes <program.c>"
+			echo "-----------------------------------------------------------------------------"
+			echo "Usage:                    Purpose:"
 			echo ""
-			echo "fortes -h -> Show Help"
+			echo "fortes [-h]               Show help"						
+			echo "fortes \"<file.c>\"         Source file - Default: Based on all claims, "
+			echo "                          adopting the following ESBMC options:"			
+			echo "                          esbmc --64 --no-library --show-claims <\$file.c>"						
+			echo "_____________________________________________________________________________"
+			echo "Additonal options:"
 			echo ""
-			echo "fortes -clean -> Clean all folders (old results)"
+			echo "fortes [-c]              "
+			echo "        Clean all folders (old results)"
+			echo "fortes [-f] \"<options>\" \"<file.c>\" "						
+			echo "        User can set main function name"
 			echo ""
-			echo "------------------------------------------------------------------------------"
-		;;
-		"-clean") 
-			echo "Do you want to clean all folders (old results)? Type y (yes) or n (No), followed by [ENTER]:"
-			read choose
-			if [ $choose = "y" ];
-			then
-				echo "> Cleaning all folders"
-				clean
-			fi
-			
-			
-		;;		
-		"-o") 
-			esbmc -h
-		;;	
-		*) 
-			echo "Sorry, there isn't this option!"
-		;;
-	esac
-	else
-		start_program $1 $2
-	fi	
-else
-	#start_program
-	echo "Please provide a C program to verify - fortes  <program.c>"
+			echo "-----------------------------------------------------------------------------"
+			exit 1;
+elif [ ${received_c} ]
+then
+	echo "Do you want to clean all folders (old results)? Type y (yes) or n (No), followed by [ENTER]:"
+	read choose
+	if [ $choose = "y" ];
+	then
+		echo "> Cleaning all folders"
+		clean
+	fi
+	#exit 1;	
+elif [ ${received_f} ]
+then
+	#for while just print the function name
+	echo $arg_d
+elif [ $# -ge 1 ]
+then
+	start_program $1
+#else
+#then
+	#echo "Please provide a C program to apply - fortes <file.c> or usage fortes -h"
 fi
-
-
-
-
+#------------------------------   main    -----------------------------
