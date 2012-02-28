@@ -37,15 +37,7 @@ start_program()
 	clear
 	#Verifying the C program	
 	if [ -e "$1" ]; 
-	then
-		echo "######################################################"
-		echo "---------------- FORTES (Beta) v2 ----------------"
-		echo "--------------------------------------------------"
-		echo " " 
-		echo "ANSI-C Program: $1"
-		echo " " 
-		echo "--------------------------------------------------"
-		
+	then	
 		#preprocessing the C program that will be analysed
 		#$1 -> source code name; $2 function name if there is.
 		exec_processadorc $1 $2		
@@ -55,11 +47,7 @@ start_program()
 }
 #./uncrustify -q -l C -c ben.cfg -f ../ccode_here/testCode.c
 exec_processadorc()
-{
-			
-	echo ""
-	echo "-> Starting the process of pre-processing code"
-	echo "-> File: $1"
+{	
 	#verifying if there is a directory in the path' code	
 	name_program=$(echo $1 | grep -o "[^/]*$")	
 	rec_file="pre_$name_program"
@@ -75,10 +63,7 @@ exec_processadorc()
 
 
 call_esbmc_claims()
-{
-	echo ""	
-	echo "-> Call ESBMC to get all the claims"
-	
+{		
 	if [ $# -eq 2 ];
 	then
 		#no function in arg to apply it
@@ -127,9 +112,7 @@ call_esbmc_claims()
 
 #Call the method that gatherig all data in the claims shown by ESBMC
 call_abs_claims(){
-	echo ""
-	echo "-> Abstraction claims"
-			
+				
 	#generating an internal extension (.abs) for abstraction from claims	
 	var_code=$1
 	pattern_2='^.[^.]*'
@@ -154,41 +137,25 @@ call_abs_claims(){
 	
 }
 
-get_and_set_claims(){
-	echo ""	
-	echo "-> Get and Set claims on C code"			
+get_and_set_claims(){			
 	#out=`$DIR_GET_AND_SET_CLAIMS $1 $2`
 	$DIR_GET_AND_SET_CLAIMS $1 $2
 	
 	#if the out == 1 there are not claims
-	rec_out=`echo $out | grep -c "1"`
+	rec_out=`echo $out | grep -c "NO CLAIMS!!!"`
 	
-	if [ $rec_out -eq 0 ];
-	then
-		#applying last formatting due to possible inclusion of new lines in the code		
-		rec_var_1=$1
-		pattern_rec='^.[^.]*'
-		if [[ $rec_var_1 =~ $pattern_rec ]];
-		then
-			#.cl -> claim
-			rec_get="new_"${BASH_REMATCH[0]}".c"
-		fi
+	#if [ $rec_out -eq 0 ];
+	#then
+		##applying last formatting due to possible inclusion of new lines in the code		
+		##echo $out
 		
-		#call the preprocessing
-		$DIR_PROC_PRIMARY -q -l C -c $CONFIG_CFG -f  $DIR_RESULT_END_CODE/$rec_get > $DIR_RESULT_END_CODE/"mf_"$rec_get
-		rm $DIR_RESULT_END_CODE/$rec_get 
-		echo "-> Method Fortes applied."
-		echo ""
-		echo "-> The new code with asserts is here:" 
-		echo "   $DIR_RESULT_END_CODE/mf_$rec_get"
-		echo "--------------------------------------------------"
-	else
-		echo "There are not claims for this functions!"
-	fi
-	
-	
-	echo ""
-	echo "######################################################"	
+		##call the preprocessing
+		##TO DO
+		##$DIR_PROC_PRIMARY -q -l C -c $CONFIG_CFG -f  $DIR_RESULT_END_CODE/$rec_get > $DIR_RESULT_END_CODE/"mf_"$rec_get
+		##rm $DIR_RESULT_END_CODE/$rec_get 		
+	#else
+		#echo "There are not claims for this functions!"
+	#fi	
 }
 
 clean(){
@@ -197,20 +164,12 @@ clean(){
 	if [ -n "$gt_file" ]; 
 	then
 		rm $DIR_RESULT_CLAIMS/*
-	fi
-		
-	gt_file=$(ls $DIR_RESULT_END_CODE/)
-	if [ -n "$gt_file" ]; 
-	then
-		rm $DIR_RESULT_END_CODE/*
 	fi	
-	
 }
 
 #------------------------------ end functions -------------------------
 
 #------------------------------   main    -----------------------------
-clear
 if [ $# -ge 1 ];
 then	
 	while getopts  "hcf:" flag
