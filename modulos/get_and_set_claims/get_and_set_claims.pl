@@ -91,9 +91,10 @@ $size_new_file_inst = @linhas_c_code;
 #lista aux line number of claim
 @rec_claims_line_n_verified=();
 
+$size_line_file_abs = @LinhasFile_abs;
 
-for ($i=0; $i <= $#LinhasFile_abs; $i++) {
-	
+for ($i=0; $i <= $size_line_file_abs; $i++) {
+	#print $LinhasFile_abs[$i]."-".$i."\n";
 	#@rec_each_line = split(/@/,$LinhasFile_abs[$i]);
 	@rec_each_line = split(/;/,$LinhasFile_abs[$i]);
 	
@@ -103,18 +104,20 @@ for ($i=0; $i <= $#LinhasFile_abs; $i++) {
 		#verificando se faz parte do código		
 		if($1 =~ m/[^FALSE  TRUE]/){
 			#print $1."\n";
-			$i++;
+			#$i++;
+			next;
 		}
 		#então a condição isolada de avaliação é das claims
 		else{
-			$i++;
+			#$i++;
+			next;
 		}		
 	}
 	#verificando propriedades que "ainda" não são tratadas para a utilização
 	#direta nas assertivas
-	#elsif($rec_each_line[-1] =~ m/(!tmp\$.|SAME-OBJECT|INVALID-POINTER|POINTER_OFFSET)/){
-	#	$i++;
-	#}
+	elsif($rec_each_line[-1] =~ m/(!tmp\$.|SAME-OBJECT|INVALID-POINTER|POINTER_OFFSET)/){		
+		next;		
+	}
 	else{
 		#propriedades validadas para a criação das assertivas
 		#atribuindo as variaveis os valores correspondentes

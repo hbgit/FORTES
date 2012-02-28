@@ -98,50 +98,34 @@ call_esbmc_claims()
 		# $rec_name -> file.cl; $1 -> code path
 		call_abs_claims "$rec_name" "$1"
 		
-	else
-		#DOES NOT WORKING YET
-		#function in arg to apply it
-		#echo $1 $2 $3
-		GET_func=($(ctags -x --c-kinds=f $1 | grep -o "^[^ ]*"))
-	
-		#Getting the total number of function in the C program
-		FUNC_total=`echo ${GET_func[*]} | wc -w`
+	else		
+		#function in arg to apply it		
+		#generating an internal extension (.cl -> claims) from original code				
+		rec_name_function_abs=$3
 		
-		#name function for next step
-		rec_name_function_abs=""
+		valid_func=`cat $1 | grep -c "$rec_name_function_abs(.*)"`
 		
-		cont=0
-		while [ $cont -lt $FUNC_total ]; 
-		do
-			if [ ${GET_func[$cont]} == "main" ];
+		if [ $valid_func -ge 1 ];
+		then			
+			var=$2
+			pattern='^.[^.]*'
+			if [[ $var =~ $pattern ]];
 			then
-				cont=`expr $cont + 1`
-			else			
-				#generating an internal extension (.cl -> claims) from original code		
-				echo "From function: "${GET_func[$cont]}
-				rec_name_function_abs=${GET_func[$cont]}
-				
-				var=$2
-				pattern='^.[^.]*'
-				if [[ $var =~ $pattern ]];
-				then
-					##.cl -> claims		
-					rec_name=${BASH_REMATCH[0]}"_func_"${GET_func[$cont]}".cl"
-					#Running the ESBMC to get the claims
-					esbmc --no-library --function ${GET_func[$cont]} --show-claims $1 > $DIR_RESULT_CLAIMS/$rec_name
-					#Call the function that running the abstraction method to get data from claims	
-					call_abs_claims "$rec_name" "$1" "$rec_name_function_abs"
-				fi
-				#echo $rec_name	
-				
-				cont=`expr $cont + 1`
+				##.cl -> claims		
+				rec_name=${BASH_REMATCH[0]}"_func_"$rec_name_function_abs".cl"
+				#Running the ESBMC to get the claims
+				esbmc --64 --no-library --function $rec_name_function_abs --show-claims $1 > $DIR_RESULT_CLAIMS/$rec_name
+				#Call the function that running the abstraction method to get data from claims	
+				call_abs_claims "$rec_name" "$1" "$rec_name_function_abs"
 			fi
-			
-		done
+		else
+			echo "This name function: <$rec_name_function_abs> is not a valid function in the code!"
+		fi	
+		
 	fi	
 }
 
-#Chama o método para abstração dos dados das claims
+#Call the method that gatherig all data in the claims shown by ESBMC
 call_abs_claims(){
 	echo ""
 	echo "-> Abstraction claims"
@@ -161,11 +145,11 @@ call_abs_claims(){
 	then
 		#All claims
 		$DIR_ABS_CLAIMS $DIR_RESULT_CLAIMS/$1
-		#get_and_set_claims "$rec_name_2"
+		get_and_set_claims "$rec_name_2" "$2"
 	else
 		#based on function, where $3 is function name		
 		$DIR_ABS_CLAIMS_FUNC $DIR_RESULT_CLAIMS/$1 $3
-		#get_and_set_claims "$rec_name_2" "$2"
+		get_and_set_claims "$rec_name_2" "$2"
 	fi
 	
 }
@@ -173,7 +157,8 @@ call_abs_claims(){
 get_and_set_claims(){
 	echo ""	
 	echo "-> Get and Set claims on C code"			
-	out=`$DIR_GET_AND_SET_CLAIMS $1 $2`
+	#out=`$DIR_GET_AND_SET_CLAIMS $1 $2`
+	$DIR_GET_AND_SET_CLAIMS $1 $2
 	
 	#if the out == 1 there are not claims
 	rec_out=`echo $out | grep -c "1"`
