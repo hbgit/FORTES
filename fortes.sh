@@ -33,8 +33,7 @@ DIR_RESULT_END_CODE=new_code
 #------------------------------ functions ---------------------------
 #get file that will be analised
 start_program()
-{	
-	clear
+{		
 	#Verifying the C program	
 	if [ -e "$1" ]; 
 	then	
@@ -151,8 +150,9 @@ get_and_set_claims(){
 		#applying last formatting due to possible inclusion of new lines in the code		
 				
 		#call the end preprocessing		
-		$DIR_PROC_PRIMARY -q -l C -c $CONFIG_CFG -f  $tmp_path 
-		rm $tmp_path 		
+		$DIR_PROC_PRIMARY -q -l C -c $CONFIG_CFG -f  $tmp_path				
+		rm $tmp_path 
+		rm $2		
 	else
 		echo "There are not claims for this functions!"
 	fi	
