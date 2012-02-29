@@ -16,13 +16,12 @@ $flag_assert = 0;
 
 #diretorio do código C analisado
 
-#$dir_c_code = "modulos/preprocessador/c_code.pre";
 $dir_c_code = $ARGV[1];
 
 #checking if is the claims to apply
 $if_blank=`cat $dir_result_claims | wc -l`;
 if($if_blank == 0){
-	print "NO CLAIMS!!!";
+	print 1;
 	exit;
 }
 
@@ -70,11 +69,11 @@ if($ARGV[0] =~ m/(^.[^.]*)/){
 
 # criação do novo codigo C
 # e inserção das ASSERTS
-$new_name_code_path = "new_code/new_".$name_c_code.".c";
+$new_name_code_path = $ARGV[2];
 
 #abrindo o novo code C para escrever e inserir a assertiva
 #*** Open file ***
-#open(NEW_FILEC , ">$new_name_code_path") or die "Nao foi possivel abrir o novo new_arquivo.c: $!";
+open(NEW_FILEC , ">$new_name_code_path") or die "Nao foi possivel abrir o novo new_arquivo.c: $!";
 $size_new_file_inst = @linhas_c_code;
 
 
@@ -145,8 +144,7 @@ $sn_i=0;
 #verificando se a biblioteca do ASSERT existe
 #para inserir a biblioteca do assert
 if($flag_assert != 1){									
-	#print NEW_FILEC "#include \"CUnit/Basic.h\" //-> by FORTES \n";				
-	print"#include \"CUnit/Basic.h\" //-> by FORTES \n";				
+	print NEW_FILEC "#include \"CUnit/Basic.h\" //-> by FORTES \n";					
 	#agora já existe a assertiva
 	$flag_assert = 1;
 	$sn_i=$sn_i+1;	
@@ -177,8 +175,7 @@ for($cont=0;$cont<$size_new_file_inst; $cont++){
 		#remove espaços em branco
 		$rec_claims_properties_verified[$cont_line]=trim($rec_claims_properties_verified[$cont_line]);
 		#finalmente escreve no arquivo
-		#print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";
-		print "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";
+		print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";		
 		#print $rec_claims_properties_verified[$cont_line];
 		
 		#testo para a proxima posição verificando se ela possue o 
@@ -195,8 +192,7 @@ for($cont=0;$cont<$size_new_file_inst; $cont++){
 			#remove espaços em branco
 			$rec_claims_properties_verified[$cont_line]=trim($rec_claims_properties_verified[$cont_line]);
 			#finalmente escreve no arquivo		
-			#print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";
-			print "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";
+			print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";			
 			
 			$cont_line = $cont_line+1;			
 			
@@ -206,8 +202,7 @@ for($cont=0;$cont<$size_new_file_inst; $cont++){
 	
 	
 			
-	#print NEW_FILEC $linhas_c_code[$cont];
-	print $linhas_c_code[$cont];
+	print NEW_FILEC $linhas_c_code[$cont];	
 	#print $cont."-> ".$New_File_inst[$cont];	
 			
 }
