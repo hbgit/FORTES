@@ -121,10 +121,9 @@ call_abs_claims(){
 		#.cl -> claims		
 		rec_name_2=${BASH_REMATCH[0]}".csv"
 	fi
-	
-	#getting the claims from function
+		
 	#ABS_CLAIMS receves as input all claims	
-	if [ $# -eq 2 ];
+	if [ $# -eq 3 ];
 	then
 		#All claims
 		$DIR_ABS_CLAIMS $DIR_RESULT_CLAIMS/$1
