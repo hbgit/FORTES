@@ -143,7 +143,10 @@ $sn_i=0;
 #print $rec_claims_line_n_verified[$cont]."\n";
 #verificando se a biblioteca do ASSERT existe
 #para inserir a biblioteca do assert
-if($flag_assert != 1){									
+if($flag_assert != 1){	
+	#**********************************************************
+	# Includes for FORTES
+	#**********************************************************
 	print NEW_FILEC "#include \"CUnit/Basic.h\" //-> by FORTES \n";					
 	#agora já existe a assertiva
 	$flag_assert = 1;
@@ -152,7 +155,8 @@ if($flag_assert != 1){
 
 
 #contador para a lista de número de linhas
-$cont_line=0;	
+$cont_line=0;
+$flag_func_cunit=0;	
 for($cont=0;$cont<$size_new_file_inst; $cont++){				
 			
 	#verifica se a linha foi identificada na analise com ESBMC
@@ -199,11 +203,70 @@ for($cont=0;$cont<$size_new_file_inst; $cont++){
 		}		
 		
 	}
+		
 	
+	#**********************************************************
+	# Functions for CUnit with global variables - FORTES
+	#**********************************************************
+	#checking the flag, comments and includes after to insert the functions
+	#Here I believe that code has at least one include in the header file
+	if($flag_func_cunit == 0 && !($linhas_c_code[$cont] =~ /(^\/|^#|^ |^\t|^$)/)){		
+		
+		print NEW_FILEC "/************************** FORTES ***************************/ \n
+		/* Pointer to the file used by the tests. */
+		static FILE* temp_file = NULL;
+		/* The suite initialization function.
+		* Opens the temporary file used by the tests.
+		* Returns zero on success, non-zero otherwise.
+		*/
+		int init_suite1(void) {
+			if (NULL == (temp_file = fopen(\"temp.txt\", \"w+\"))) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+
+		/* The suite cleanup function.
+		* Closes the temporary file used by the tests.
+		* Returns zero on success, non-zero otherwise.
+		*/
+		int clean_suite1(void) {
+			if (0 != fclose(temp_file)) {
+				return -1;
+			} else {
+				temp_file = NULL;
+				return 0;
+			}
+		}
+
+		int argc_my;
+		char **argv_my; 
+		/************************** FORTES ***************************/
+		/********Space of C code with test cases <- FORTES************/
+		\n";
+		
+		#stop flag
+		$flag_func_cunit=1;		
+	}
 	
-			
-	print NEW_FILEC $linhas_c_code[$cont];	
-	#print $cont."-> ".$New_File_inst[$cont];	
+	#**********************************************************
+	# Update name main functions for testclaim on CUnit - FORTES
+	#**********************************************************
+	if( $linhas_c_code[$cont] =~ /main.*\(/ ){
+		if($linhas_c_code[$cont] =~ /{/){
+			print NEW_FILEC "OKAY";
+		}else{
+			print NEW_FILEC "NOKAY \n";
+			$inter_cont=$cont;
+			while(!($linhas_c_code[$inter_cont] =~ /{/)){
+				$inter_cont=$inter_cont+1;
+			}
+			print NEW_FILEC "void testClaims(void){";
+			$cont = $inter_cont+1;
+		}
+	}
+	print NEW_FILEC $linhas_c_code[$cont];
 			
 }
 

@@ -46,8 +46,7 @@ void d_div(){
 		
 }
 
-main()
-{
+main(){
 	calc(12,7);
 	d_div();
 }
