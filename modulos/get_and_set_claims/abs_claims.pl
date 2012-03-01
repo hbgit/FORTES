@@ -93,7 +93,7 @@ for ($i=0; $i <= $sizeLinhasFile; $i++) {
 		
 		#reset the list
 		@cp_blk_clam = ();
-		#resert the comments variable
+		#reset the comments variable
 		$get_blk_coment="";
 	}	
 				
