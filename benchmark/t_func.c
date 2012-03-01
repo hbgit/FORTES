@@ -8,11 +8,8 @@ calc(int a, int b){
 	int i;
 	char *p;
 		
-	for(i=0;b<a;i++){
-		if(i == b){
-			z[i]=b;
-			*(p+i)='x';
-		}
+	for(i=0;i<b;i++){		
+		z[i]=b;				
 	}
 }
 
@@ -46,7 +43,10 @@ void d_div(){
 		
 }
 
-main(){
+main(argc,argv)
+int argc;
+char *argv[3];
+{
 	calc(12,7);
 	d_div();
 }

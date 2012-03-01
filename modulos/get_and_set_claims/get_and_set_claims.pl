@@ -254,12 +254,12 @@ for($cont=0;$cont<$size_new_file_inst; $cont++){
 	# Update name main functions for testclaim on CUnit - FORTES
 	#**********************************************************
 	if( $linhas_c_code[$cont] =~ /main.*\(/ ){
-		if($linhas_c_code[$cont] =~ /{/){
-			print NEW_FILEC "OKAY";
-		}else{
-			print NEW_FILEC "NOKAY \n";
+		if(!($linhas_c_code[$cont] =~ /{/)){			
 			$inter_cont=$cont;
 			while(!($linhas_c_code[$inter_cont] =~ /{/)){
+				#The old main functions has been commented here
+				chomp($linhas_c_code[$inter_cont]);
+				print NEW_FILEC "//".$linhas_c_code[$inter_cont]."-> by FORTES \n";
 				$inter_cont=$inter_cont+1;
 			}
 			print NEW_FILEC "void testClaims(void){";
@@ -269,6 +269,47 @@ for($cont=0;$cont<$size_new_file_inst; $cont++){
 	print NEW_FILEC $linhas_c_code[$cont];
 			
 }
+
+#***************************************************************
+# End test functions and insert the new main for CUnit - FORTES
+#***************************************************************
+print NEW_FILEC "/********* End of space of C code with test cases *********/ \n";
+print NEW_FILEC "/* The main() function for setting up and running the tests.
+* Returns a CUE_SUCCESS on successful running, another
+ * CUnit error code on failure.
+ */
+int main(int argc, char *argv[3]) 
+{
+    CU_pSuite pSuite = NULL;
+    argc_my = argc;		
+	argv_my = argv;
+	
+
+    /* initialize the CUnit test registry */
+    if (CUE_SUCCESS != CU_initialize_registry())
+        return CU_get_error();
+
+    /* add a suite to the registry */
+    pSuite = CU_add_suite(\"log\", init_suite1, clean_suite1);
+    if (NULL == pSuite) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    /* add the tests to the suite */
+    /* NOTE - ORDER IS IMPORTANT - MUST TEST fread() AFTER fprintf() */
+    if ((NULL == CU_add_test(pSuite, \"testClaims\", testClaims))) {
+        CU_cleanup_registry();
+        return CU_get_error();
+    }
+
+    /* Run all tests using the CUnit Basic interface */
+    CU_basic_set_mode(CU_BRM_VERBOSE);
+    CU_basic_run_tests();
+    CU_cleanup_registry();
+    return CU_get_error();
+}
+";
 
 #*** Close the file ***
 close(NEW_FILEC);
