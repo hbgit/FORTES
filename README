@@ -60,14 +60,14 @@ ________________________________________________________________________________
 In order to install FORTES on your PC, you should download and save the fortes_vx.tar.gz file on your disk. 
 After that, you should type the following command:
 
-$ tar -xzvf Fortes_Project_vx_beta.tar.gz
+$ tar -xzvf fortes_vx.tar.gz
 
 The FORTES distribution is split into directories and files:
 
 - code_samples (Samples codes to apply FORTES) 
 - modulos
   - get_and_set_claims
-  - preprocessador
+  - preprocessor
 	- aux_pre_processamento
 	- c_code.pre
 	- pre_processamento_primario

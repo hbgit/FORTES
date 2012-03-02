@@ -10,19 +10,18 @@
 #---------------------------------------------------------------------
 
 #--------------------------------------------------------------------
-#settings preprocessador
-CONFIG_CFG=modulos/preprocessador/pre_processamento_primario/ben.cfg
-DIR_PROC_PRIMARY=modulos/preprocessador/pre_processamento_primario/uncrustify
-DIR_PROC_AUX=modulos/preprocessador/aux_pre_processamento/aux_formatation.pl
-DIR_NEWCODEPROC=modulos/preprocessador/c_code.pre
+#settings preprocessor
+CONFIG_CFG=modules/preprocessor/primary_preprocessing/ben.cfg
+DIR_PROC_PRIMARY=modules/preprocessor/primary_preprocessing/uncrustify
+DIR_PROC_AUX=modules/preprocessor/aux_preprocessing/aux_formatting.pl
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
 #settings for get and set claims
 DIR_RESULT_CLAIMS=result_claims
-DIR_ABS_CLAIMS=modulos/get_and_set_claims/abs_claims.pl
-DIR_ABS_CLAIMS_FUNC=modulos/get_and_set_claims/abs_claims_func.pl
-DIR_GET_AND_SET_CLAIMS=modulos/get_and_set_claims/get_and_set_claims.pl
+DIR_ABS_CLAIMS=modules/get_and_set_claims/abs_claims.pl
+DIR_ABS_CLAIMS_FUNC=modules/get_and_set_claims/abs_claims_func.pl
+DIR_GET_AND_SET_CLAIMS=modules/get_and_set_claims/get_and_set_claims.pl
 #--------------------------------------------------------------------
 
 DIR_RESULT_END_CODE=new_code
