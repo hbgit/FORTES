@@ -65,27 +65,27 @@ $ tar -xzvf fortes_vx.tar.gz
 The FORTES distribution is split into directories and files:
 
 - code_samples (Samples codes to apply FORTES) 
-- modulos
+- modules
   - get_and_set_claims
   - preprocessor
-	- aux_pre_processamento
-	- c_code.pre
-	- pre_processamento_primario
-- new_code (Output Fortes Method)
+	- aux_preprocessing (Could not to finish yet)	
+	- primary_preprocessing
 - result_claims
 - README  
-- fortes.sh  
+- fortes.sh 
 
 _____________________________________________________________________________________________________________________
+
 -> How running the FORTES?
+_____________________________________________________________________________________________________________________
 
-To run the FORTES you must access the directory unpacked the tool.
+It is advisable that you should set the environment variable PATH in your .bashrc file as follows:
 
-$ cd Fortes_Project_vx_beta/
+$ export PATH=$PATH:/home/user/fortes_vx/
 
-And then run the script.
+And then run the FORTES script.
 
-$ ./fortes.sh
+$ fortes <file.c>
 
 For help and others options:
 
