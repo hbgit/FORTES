@@ -147,7 +147,8 @@ for($cont=0;$cont<$size_new_file_inst; $cont++){
 		# remove the blank spaces
 		$rec_claims_properties_verified[$cont_line]=trim($rec_claims_properties_verified[$cont_line]);
 		
-		print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";		
+		#print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";		
+		print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line] from ESBMC -> by FORTES \n";		
 				
 		$cont_line = $cont_line+1;
 		while($cont == ($rec_claims_line_n_verified[$cont_line]-1)+$sn_i){
@@ -159,7 +160,8 @@ for($cont=0;$cont<$size_new_file_inst; $cont++){
 					
 			$rec_claims_properties_verified[$cont_line]=trim($rec_claims_properties_verified[$cont_line]);
 					
-			print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";			
+			#print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line]::$rec_claims_line_n_verified[$cont_line]->by FORTES \n";			
+			print NEW_FILEC "CU_ASSERT($rec_claims_properties_verified[$cont_line]); //-> $rec_ns_claims_verified[$cont_line] from ESBMC -> by FORTES \n";			
 			
 			$cont_line = $cont_line+1;			
 			
