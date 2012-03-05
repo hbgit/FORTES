@@ -7,7 +7,7 @@
 #---------------------------------------------------------------
 
 #Reading the file.cl with claims text
-open(ENTRADA , "<$ARGV[0]") or die "Nao foi possivel abrir o arquivo.cl para leitura: $!";
+open(ENTRADA , "<$ARGV[0]") or die "Could not open for reading the file.cl: $!";
 		
 while (<ENTRADA>) { # assigning to the variable $_ one line per time
 	push(@LinhasFile,$_);

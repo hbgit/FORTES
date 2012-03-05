@@ -25,7 +25,7 @@ if($if_blank == 0){
 
 
 #Reading the file.csv with gathered data from results of the claims
-open(ENTRADA , "<$dir_result_claims") or die "Nao foi possivel abrir o arquivo.tmp para leitura: $!";
+open(ENTRADA , "<$dir_result_claims") or die "Could not open for reading the file.csv: $!";
 		
 while (<ENTRADA>) { # assigning to the variable $_ one line per time
 	push(@LinhasFile_abs,$_);
@@ -44,7 +44,7 @@ if($ARGV[0] =~ m/(^.[^.]*)/){
 	#PATH of the C source code	
 	$path_c_code = $dir_c_code;
 		
-	open(C_CODE , "<$path_c_code") or die "Nao foi possivel abrir o arquivo.c para leitura: $!";
+	open(C_CODE , "<$path_c_code") or die "Could not open for reading the file.c: $!";
 		
 	while (<C_CODE>) { 
 		#checking if there is the library <assert.h>		
@@ -61,7 +61,7 @@ if($ARGV[0] =~ m/(^.[^.]*)/){
 $new_name_code_path = $ARGV[2];
 
 #*** Open file ***
-open(NEW_FILEC , ">$new_name_code_path") or die "Nao foi possivel abrir o novo new_arquivo.c: $!";
+open(NEW_FILEC , ">$new_name_code_path") or die "Could not open for reading the new new_file.c: $!";
 $size_new_file_inst = @linhas_c_code;
 
 # Reading the vector with the lines from file.abs that has the properties
