@@ -10,9 +10,19 @@
 #---------------------------------------------------------------------
 
 #--------------------------------------------------------------------
-#settings preprocessor
+#settings preprocessor and arch flag
+get_arch=`arch`
+set_arch=0
+
+if [ $get_arch == "x86_64" ];
+then
+	set_arch="--64"	
+	DIR_PROC_PRIMARY=modules/preprocessor/primary_preprocessing/arch_64/uncrustify
+else
+	set_arch="--32"
+	DIR_PROC_PRIMARY=modules/preprocessor/primary_preprocessing/arch_32/uncrustify	
+fi
 CONFIG_CFG=modules/preprocessor/primary_preprocessing/ben.cfg
-DIR_PROC_PRIMARY=modules/preprocessor/primary_preprocessing/uncrustify
 DIR_PROC_AUX=modules/preprocessor/aux_preprocessing/aux_formatting.pl
 #--------------------------------------------------------------------
 
@@ -71,7 +81,7 @@ call_esbmc_claims()
 		fi
 			
 		#Running the ESBMC to get the claims
-		esbmc --64 --no-library --show-claims $1 > $DIR_RESULT_CLAIMS/$rec_name			
+		esbmc $set_arch --no-library --show-claims $1 > $DIR_RESULT_CLAIMS/$rec_name			
 		
 		#Call the function that running the abstraction method to get data from claims	
 		#$rec_name -> file.cl; $1 -> code path; $2 -> code name
@@ -94,7 +104,7 @@ call_esbmc_claims()
 				##.cl -> claims		
 				rec_name=${BASH_REMATCH[0]}"_func_"$rec_name_function_abs".cl"
 				#Running the ESBMC to get the claims
-				esbmc --64 --no-library --function $rec_name_function_abs --show-claims $1 > $DIR_RESULT_CLAIMS/$rec_name
+				esbmc $set_arch --no-library --function $rec_name_function_abs --show-claims $1 > $DIR_RESULT_CLAIMS/$rec_name
 				#Call the function that running the abstraction method to get data from claims	
 				call_abs_claims "$rec_name" "$1" "$rec_name_function_abs" "$2"
 			fi
@@ -201,7 +211,7 @@ then
 			echo "fortes [-h]               Show help"						
 			echo "fortes \"<file.c>\"         Source file - Default: Based on all claims, "
 			echo "                          adopting the following ESBMC options:"			
-			echo "                          esbmc --64 --no-library --show-claims <\$file.c>"						
+			echo "                          esbmc --<arch> --no-library --show-claims <\$file.c>"						
 			echo "_____________________________________________________________________________"
 			echo "Additonal options:"
 			echo ""
