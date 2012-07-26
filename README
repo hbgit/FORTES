@@ -22,8 +22,9 @@ ________________________________________________________________________________
 
 To use this tool is necessary that the system contains the following software already installed properly:
 
-- Shell Script;
 - Perl;
+- CUnit available at http://cunit.sourceforge.net;
+- Shell Script;
 - And the ESBMC model checker, which you should set the environment variable PATH in your .bashrc.
 _____________________________________________________________________________________________________________________
 

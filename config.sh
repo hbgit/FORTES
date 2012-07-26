@@ -13,7 +13,7 @@ cd $tmp1
 list_file=`ls config.sh | wc -l`
 if [ $list_file -ge 1 ];
 then	
-	echo "Running startup-config..."
+	echo "Running startup-config..."	
 	tr1=`echo $tmp1 | sed s,/,\\\\\\\\\/,g`	
 	cat fortes | sed -e "s/ABS_PATH_FORTES=\"\[<??>\]\"/ABS_PATH_FORTES=$tr1/g" > out.tmp
 	rm fortes
