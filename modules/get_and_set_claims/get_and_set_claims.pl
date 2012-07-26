@@ -19,7 +19,9 @@ $dir_c_code = $ARGV[1];
 
 #checking if there is claims to apply
 $if_blank=`cat $dir_result_claims | wc -l`;
+
 if($if_blank == 0){
+	print ">>>>>>> \n";
 	print 1;
 	exit;
 }
@@ -53,6 +55,10 @@ if($ARGV[0] =~ m/(^.[^.]*)/){
 			#flag to set that already there is the library <assert.h>
 			$flag_assert = 1;
 		}
+		if($_ =~ m/(<stdio.h>)/){
+			#flag to set that already there is the library <stdio.h>
+			$flag_stdio = 1;
+		}
 		push(@linhas_c_code,$_);
 	}
 	close C_CODE;	 	
@@ -82,13 +88,23 @@ $size_line_file_abs = @LinhasFile_abs;
 for ($i=0; $i <= $size_line_file_abs; $i++) {	
 	@rec_each_line = split(/;/,$LinhasFile_abs[$i]);
 	
-	# Checking if there is directives to apply boolean expressions in the claims	
-	if($rec_each_line[-1] =~ /(.*FALSE.*|.*TRUE.*)/){
+	# Checking if there is directives to apply boolean expressions in the claims		
+	if($rec_each_line[-1] =~ m/(.*FALSE.*|.*TRUE.*)/g){
 		# checking is in the source code
-		if($1 =~ m/[^FALSE  TRUE]/){			
-			next;
+		$get_flag_assert=$1;
+		if($get_flag_assert =~ m/(.*FALSE.*)/){			
+			#print "assert(0)";
+			# assigning to correct varibles or lists			
+			push(@rec_claims_line_n_verified,$rec_each_line[0]);
+			push(@rec_ns_claims_verified,$rec_each_line[1]);
+			push(@rec_claims_Coments_verified,$rec_each_line[2]);
+			push(@rec_claims_properties_verified,"0");					
 		}else{
-			next;
+			# assigning to correct varibles or lists			
+			push(@rec_claims_line_n_verified,$rec_each_line[0]);
+			push(@rec_ns_claims_verified,$rec_each_line[1]);
+			push(@rec_claims_Coments_verified,$rec_each_line[2]);
+			push(@rec_claims_properties_verified,"1");
 		}		
 	}
 	# Checking properties that "still" do not applied is this FORTES versions
@@ -116,16 +132,32 @@ for ($i=0; $i <= $size_line_file_abs; $i++) {
 #i=0 -> Sn=(i=0+1)+(i=1+1)+(i=2+1), always an increment more for analised line
 $sn_i=0;
 
+#-------------------------------------------------------
+#checking BASIC LIBRARIES TO RUN CODE
+
 #checking if there is the library <assert.h>		
-if($flag_assert != 1){	
+#if($flag_assert != 1){	
 	#**********************************************************
 	# Includes for FORTES
 	#**********************************************************
 	print NEW_FILEC "#include \"CUnit/Basic.h\" //-> by FORTES \n";					
 	# Now already there is an assertion
-	$flag_assert = 1;
+	#$flag_assert = 1;
+	#$sn_i=$sn_i+1;	
+#}
+
+if($flag_stdio != 1){	
+	#**********************************************************
+	# Includes for FORTES
+	#**********************************************************
+	print NEW_FILEC "#include <stdio.h> //-> by FORTES \n";					
+	# Now already there is an assertion
+	$flag_stdio = 1;
 	$sn_i=$sn_i+1;	
 }
+
+#-------------------------------------------------------
+
 
 # Counter to list de line number
 $cont_line=0;

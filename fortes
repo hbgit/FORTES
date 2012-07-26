@@ -9,7 +9,7 @@
 # License: GPL V3	
 #---------------------------------------------------------------------
 
-ABS_PATH_FORTES="[<??>]"
+ABS_PATH_FORTES=/home/herbert/Documents/FORTES_v2.1/Fortes_v2_1_linux
 
 flag_ABS=`echo $ABS_PATH_FORTES | grep -c "\[<??>\]"`
 if [ $flag_ABS -eq 1 ];
@@ -153,10 +153,9 @@ call_abs_claims(){
 
 get_and_set_claims(){			
 	#$1 -> list claims; $2-> path pre-processing code; $3 -> code name		
-	tmp_path=$(echo $2 | sed "s/pre_$3/new_$3.tmp/g")
-	#output_file_result=$DIR_RESULT_CLAIMS"/"$1	
+	tmp_path=$(echo $2 | sed "s/pre_$3/new_$3.tmp/g")	
 	out=`$DIR_GET_AND_SET_CLAIMS $1 $2 $tmp_path`
-	
+		
 	#if the out == 1 there are not claims
 	rec_out=`echo $out | grep -c "1"`
 	

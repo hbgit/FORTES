@@ -98,7 +98,13 @@ $ export PATH=$PATH:/home/user/fortes_vx/
 
 Testing FORTES
 
-$ fortes code_samples/D_CBMC_bound_array.c
+$ fortes code_samples/D_CBMC_bound_array.c > out_code.c
+
+>> STEP 5:
+
+Running CUnit code
+
+$ gcc out_code.c -o out_code -lcunit
 
 _____________________________________________________________________________________________________________________
 
