@@ -153,7 +153,7 @@ if($flag_stdio != 1){
 	print NEW_FILEC "#include <stdio.h> //-> by FORTES \n";					
 	# Now already there is an assertion
 	$flag_stdio = 1;
-	$sn_i=$sn_i+1;	
+	$sn_i=$sn_i-1;	
 }
 
 #-------------------------------------------------------
