@@ -6,7 +6,6 @@
 # Version: 2 - Year: 2012
 # License: GPL V3
 #---------------------------------------------------------------
-
 #Reading the file.cl with claims text
 open(ENTRADA , "<$ARGV[0]") or die "Could not open for reading the file.cl: $!";
 		
@@ -106,20 +105,21 @@ for ($i=0; $i <= $sizeLinhasFile; $i++) {
 }
 
 #Writting the data gathered an temporary file
-$name_c_code="";
-if($ARGV[0] =~ m/(^.[^.]*)/){
-	$name_c_code=$1;
-}
+#$name_c_code="";
+#if($ARGV[0] =~ m/(^.[^.]*)/){
+#	$name_c_code=$1;
+#}
     
-open(RESULT_ABS_P, ">$name_c_code.csv"); #open for write, overwrite
+#open(RESULT_ABS_P, ">$name_c_code.csv"); #open for write, overwrite
 
 #Reading the auxiliary list
 foreach(@lines_aux_file){	
     
     #Writting the data gathered an temporary file
-	print RESULT_ABS_P $_;
+	#print RESULT_ABS_P $_;
+	print $_;
 	
 }
 
 #close the temporary file
-close(RESULT_ABS_P);	
+#close(RESULT_ABS_P);	

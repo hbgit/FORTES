@@ -8,7 +8,8 @@
 #---------------------------------------------------------------
 
 #dir resutl_claims
-$dir_result_claims = "result_claims/".$ARGV[0];
+#$dir_result_claims = "result_claims/".$ARGV[0];
+$dir_result_claims = $ARGV[0];
 
 #Set flag to asserts
 $flag_assert = 0;

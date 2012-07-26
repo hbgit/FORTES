@@ -5,9 +5,18 @@
 # Goal: This tool aims to create Test Cases based on claims from ESBMC 
 #		model checker
 # Author: Herbert O. Rocha E-mail: herberthb12@gmail.com
-# Version: 2 - Year: 2012
+# Version: 2.1 - Year: 2012
 # License: GPL V3	
 #---------------------------------------------------------------------
+
+ABS_PATH_FORTES="[<??>]"
+
+flag_ABS=`echo $ABS_PATH_FORTES | grep -c "\[<??>\]"`
+if [ $flag_ABS -eq 1 ];
+then
+	echo "Sorry, you need to run the config.sh script first. See REAME file."
+	exit 1;
+fi
 
 #--------------------------------------------------------------------
 #settings preprocessor and arch flag
@@ -17,24 +26,24 @@ set_arch=0
 if [ $get_arch == "x86_64" ];
 then
 	set_arch="--64"	
-	DIR_PROC_PRIMARY=modules/preprocessor/primary_preprocessing/arch_64/uncrustify
+	DIR_PROC_PRIMARY=$ABS_PATH_FORTES"/modules/preprocessor/primary_preprocessing/arch_64/uncrustify"
 else
 	set_arch="--32"
-	DIR_PROC_PRIMARY=modules/preprocessor/primary_preprocessing/arch_32/uncrustify	
+	DIR_PROC_PRIMARY=$ABS_PATH_FORTES"/modules/preprocessor/primary_preprocessing/arch_32/uncrustify"
 fi
-CONFIG_CFG=modules/preprocessor/primary_preprocessing/ben.cfg
-DIR_PROC_AUX=modules/preprocessor/aux_preprocessing/aux_formatting.pl
+CONFIG_CFG=$ABS_PATH_FORTES"/modules/preprocessor/primary_preprocessing/ben.cfg"
+DIR_PROC_AUX=$ABS_PATH_FORTES"/modules/preprocessor/aux_preprocessing/aux_formatting.pl"
 #--------------------------------------------------------------------
 
 #--------------------------------------------------------------------
 #settings for get and set claims
-DIR_RESULT_CLAIMS=result_claims
-DIR_ABS_CLAIMS=modules/get_and_set_claims/abs_claims.pl
-DIR_ABS_CLAIMS_FUNC=modules/get_and_set_claims/abs_claims_func.pl
-DIR_GET_AND_SET_CLAIMS=modules/get_and_set_claims/get_and_set_claims.pl
+DIR_RESULT_CLAIMS=$ABS_PATH_FORTES"/result_claims"
+DIR_ABS_CLAIMS=$ABS_PATH_FORTES"/modules/get_and_set_claims/abs_claims.pl"
+DIR_ABS_CLAIMS_FUNC=$ABS_PATH_FORTES"/modules/get_and_set_claims/abs_claims_func.pl"
+DIR_GET_AND_SET_CLAIMS=$ABS_PATH_FORTES"/modules/get_and_set_claims/get_and_set_claims.pl"
 #--------------------------------------------------------------------
 
-DIR_RESULT_END_CODE=new_code
+DIR_RESULT_END_CODE=$ABS_PATH_FORTES"/new_code"
 
 #------------------------------ functions ---------------------------
 #get file that will be analised
@@ -72,42 +81,49 @@ call_esbmc_claims()
 	then
 		#no function in arg to apply it
 		#generating an internal extension (.cl -> claims) from original code		
-		var=$2
-		pattern='^.[^.]*'
-		if [[ $var =~ $pattern ]];
-		then
+		#var=$2
+		#pattern='^.[^.]*'
+		#if [[ $var =~ $pattern ]];
+		#then
 			#.cl -> claims
-			rec_name=${BASH_REMATCH[0]}".cl"
-		fi
-			
-		#Running the ESBMC to get the claims
+		#	rec_name=${BASH_REMATCH[0]}".cl"
+		#fi
+		tmp_cl=`echo $2| grep -o "[^/]*$" | grep -o "^[^.]*"`
+		rec_name=$tmp_cl".cl"
+				
+		#Running the ESBMC to get the claims		
 		esbmc $set_arch --no-library --show-claims $1 > $DIR_RESULT_CLAIMS/$rec_name			
 		
 		#Call the function that running the abstraction method to get data from claims	
-		#$rec_name -> file.cl; $1 -> code path; $2 -> code name
+		#ARGS function:
+		# $1 -> .cl file
+		# $2 -> list claims; 
+		# $3 -> code path; 
+		# $4 -> code name;
+		# $5 -> path result claims
 		
-		call_abs_claims "$rec_name" "$1" "$2"
+		call_abs_claims "$DIR_RESULT_CLAIMS/$rec_name" "$1" "$2" "$tmp_cl" "$DIR_RESULT_CLAIMS"
 		
 	else		
+			
 		#function in arg to apply it		
-		#generating an internal extension (.cl -> claims) from original code				
+		#generating an internal extension (.cl -> claims) from original code						
 		rec_name_function_abs=$3
 		
 		valid_func=`cat $1 | grep -c "$rec_name_function_abs(.*)"`
 		
 		if [ $valid_func -ge 1 ];
 		then			
-			var=$2
-			pattern='^.[^.]*'
-			if [[ $var =~ $pattern ]];
-			then
-				##.cl -> claims		
-				rec_name=${BASH_REMATCH[0]}"_func_"$rec_name_function_abs".cl"
-				#Running the ESBMC to get the claims
-				esbmc $set_arch --no-library --function $rec_name_function_abs --show-claims $1 > $DIR_RESULT_CLAIMS/$rec_name
-				#Call the function that running the abstraction method to get data from claims	
-				call_abs_claims "$rec_name" "$1" "$rec_name_function_abs" "$2"
-			fi
+			tmp_name=`echo $2| grep -o "[^/]*$" | grep -o "^[^.]*"`
+			rec_name=$tmp_name".cl"			
+			
+			##.cl -> claims		
+			rec_name=$tmp_name"_func_"$rec_name_function_abs".cl"
+			#Running the ESBMC to get the claims
+			esbmc $set_arch --no-library --function $rec_name_function_abs --show-claims $1 > $DIR_RESULT_CLAIMS/$rec_name
+			#Call the function that running the abstraction method to get data from claims	
+			call_abs_claims "$DIR_RESULT_CLAIMS/$rec_name" "$1" "$rec_name_function_abs" "$2"
+			
 		else
 			echo "This name function: <$rec_name_function_abs> is not a valid function in the code!"
 		fi	
@@ -118,30 +134,27 @@ call_esbmc_claims()
 #Call the method that gatherig all data in the claims shown by ESBMC
 call_abs_claims(){				
 	#generating an internal extension (.abs) for abstraction from claims	
-	var_code=$1
-	pattern_2='^.[^.]*'
-	if [[ $var_code =~ $pattern_2 ]];
-	then
-		#.cl -> claims		
-		rec_name_2=${BASH_REMATCH[0]}".csv"
-	fi
+	
+	rec_name_2=$4".csv"
+	
 		
 	#ABS_CLAIMS receives as input all claims	
-	if [ $# -eq 3 ];
+	if [ $# -eq 5 ];
 	then
-		#All claims
-		$DIR_ABS_CLAIMS $DIR_RESULT_CLAIMS/$1
-		get_and_set_claims "$rec_name_2" "$2" "$3"
+		#All claims					
+		$DIR_ABS_CLAIMS $1 > $DIR_RESULT_CLAIMS"/$rec_name_2"
+		get_and_set_claims "$DIR_RESULT_CLAIMS/$rec_name_2" "$2" "$3"
 	else
 		#based on function, where $3 is function name		
-		$DIR_ABS_CLAIMS_FUNC $DIR_RESULT_CLAIMS/$1 $3
-		get_and_set_claims "$rec_name_2" "$2" "$4"
+		$DIR_ABS_CLAIMS_FUNC $1 $3 > $DIR_RESULT_CLAIMS"/$rec_name_2"
+		get_and_set_claims "$DIR_RESULT_CLAIMS/$rec_name_2" "$2" "$4"
 	fi	
 }
 
 get_and_set_claims(){			
-	#$1 -> list claims; $2-> path pre-processing code; $3 -> code name	
+	#$1 -> list claims; $2-> path pre-processing code; $3 -> code name		
 	tmp_path=$(echo $2 | sed "s/pre_$3/new_$3.tmp/g")
+	#output_file_result=$DIR_RESULT_CLAIMS"/"$1	
 	out=`$DIR_GET_AND_SET_CLAIMS $1 $2 $tmp_path`
 	
 	#if the out == 1 there are not claims
