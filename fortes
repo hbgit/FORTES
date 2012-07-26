@@ -9,7 +9,7 @@
 # License: GPL V3	
 #---------------------------------------------------------------------
 
-ABS_PATH_FORTES=ABS_PATH_FORTES="[<??>]"
+ABS_PATH_FORTES="[<??>]"
 
 flag_ABS=`echo $ABS_PATH_FORTES | grep -c "\[<??>\]"`
 if [ $flag_ABS -eq 1 ];
@@ -66,7 +66,7 @@ exec_processadorc()
 	name_program=$(echo $1 | grep -o "[^/]*$")	
 	rec_file="pre_$name_program"
 	rec_path=$(echo $1 | sed "s/$name_program/$rec_file/g") 
-	
+		
 	$DIR_PROC_PRIMARY -q -l C -c $CONFIG_CFG -f $1 > $rec_path	
 	#call ESBMC to get the claims-> <location of the pre-processed code(URL)> <only the code name>
 	#$2 function name if there is.			

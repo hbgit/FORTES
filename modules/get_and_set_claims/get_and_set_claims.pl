@@ -20,8 +20,7 @@ $dir_c_code = $ARGV[1];
 #checking if there is claims to apply
 $if_blank=`cat $dir_result_claims | wc -l`;
 
-if($if_blank == 0){
-	print ">>>>>>> \n";
+if($if_blank == 0){	
 	print 1;
 	exit;
 }
@@ -141,9 +140,10 @@ $sn_i=0;
 	# Includes for FORTES
 	#**********************************************************
 	print NEW_FILEC "#include \"CUnit/Basic.h\" //-> by FORTES \n";					
+	$sn_i=$sn_i+1;	
 	# Now already there is an assertion
 	#$flag_assert = 1;
-	#$sn_i=$sn_i+1;	
+	
 #}
 
 if($flag_stdio != 1){	
