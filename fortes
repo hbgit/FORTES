@@ -9,7 +9,7 @@
 # License: GPL V3	
 #---------------------------------------------------------------------
 
-ABS_PATH_FORTES="[<??>]"
+ABS_PATH_FORTES=/home/nhb/Documents/ON_DEV/MAP2CHECK_FORTES_ON_DEV/FORTES
 
 flag_ABS=`echo $ABS_PATH_FORTES | grep -c "\[<??>\]"`
 if [ $flag_ABS -eq 1 ];
